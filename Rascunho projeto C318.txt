@@ -1,0 +1,254 @@
+4. Previsão de Custo de Tratamento
+Pergunta: Qual será o custo médio do tratamento para novos casos de doenças com base nos dados históricos?
+Aplicação: Modelos de regressão linear ou árvores de regressão podem ser utilizados para prever o custo de tratamentos futuros com base nos fatores de doença, região e incidência.
+
+3. Segmentação de Pacientes para Tratamentos Específicos
+Pergunta: Quais grupos de pacientes têm maior probabilidade de responder a determinados tipos de tratamento?
+Aplicação: Algoritmos de agrupamento (clustering), como K-means, podem ser usados para identificar perfis de pacientes que respondem melhor a tipos específicos de tratamentos, ajudando a personalizar intervenções médicas.
+
+6. Otimização de Alocação de Recursos
+Pergunta: Como priorizar a alocação de recursos em regiões e doenças específicas para maximizar a eficiência dos tratamentos?
+Aplicação: Técnicas de análise de decisão e modelos preditivos podem ajudar a alocar orçamentos e recursos médicos para áreas e doenças com maior demanda, reduzindo custos e otimizando o impacto.
+
+7. Análise da Eficácia de Tratamentos
+Pergunta: Qual tratamento tem maior eficácia em termos de redução de casos e mortalidade?
+Aplicação: Algoritmos de classificação e análise de sobrevivência podem ser usados para analisar os resultados de diferentes tipos de tratamentos em termos de sua eficácia em reduzir a mortalidade e a duração da doença.
+
+# Creating a new notebook with visualizations and following the same pattern from the original notebook
+nb_visual = nbf.new_notebook()
+
+# Introduction in markdown
+intro_visual = nbf.new_markdown_cell("""
+# Análise de Dados: Segmentação e Previsão de Custos
+
+Este notebook responde às questões de negócio usando técnicas de aprendizado de máquina, com foco em visualizações gráficas e comentários explicativos.
+""")
+nb_visual['cells'].append(intro_visual)
+
+# Step 1: Importing libraries
+import_libraries = nbf.new_markdown_cell("""
+### **Passo 1**: Importação de Bibliotecas
+Neste passo, importamos as bibliotecas essenciais para a análise e visualização dos dados.
+""")
+nb_visual['cells'].append(import_libraries)
+
+import_code = nbf.new_code_cell("""
+# Bibliotecas essenciais para análise de dados e visualizações
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.cluster import KMeans
+from sklearn.metrics import mean_squared_error
+
+# Definições de estilo
+plt.style.use('seaborn-darkgrid')
+""")
+nb_visual['cells'].append(import_code)
+
+# Step 2: Load and explore data
+load_data = nbf.new_markdown_cell("""
+### **Passo 2**: Carregamento e Exploração dos Dados
+
+Carregamos o conjunto de dados para realizar as análises posteriores.
+""")
+nb_visual['cells'].append(load_data)
+
+load_data_code = nbf.new_code_cell(f"""
+# Carregamento do arquivo CSV
+df = pd.read_csv('{csv_file_path}')
+
+# Exibição dos primeiros registros para análise
+df.head()
+""")
+nb_visual['cells'].append(load_data_code)
+
+# Step 3: Previsão de Custo de Tratamento
+custo_previsao_visual = nbf.new_markdown_cell("""
+### **Passo 3**: Previsão de Custo de Tratamento
+
+Utilizamos um modelo de regressão linear para prever o custo médio de tratamento baseado em fatores como incidência, mortalidade e número de casos.
+""")
+nb_visual['cells'].append(custo_previsao_visual)
+
+custo_previsao_visual_code = nbf.new_code_cell("""
+# Selecionando variáveis preditoras e a variável alvo
+X = df[['Incidência Anual (por 100k hab)', 'Número de Casos', 'Mortalidade (%)']]
+y = df['Custo Médio do Tratamento (R$)']
+
+# Dividindo os dados em treino e teste
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Treinando o modelo de regressão linear
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Fazendo previsões
+y_pred = model.predict(X_test)
+
+# Calculando o erro quadrado médio
+mse = mean_squared_error(y_test, y_pred)
+print(f'Erro Quadrado Médio: {mse}')
+
+# Visualizando o resultado
+plt.figure(figsize=(8, 6))
+plt.scatter(y_test, y_pred, alpha=0.5)
+plt.xlabel('Custo Real')
+plt.ylabel('Custo Previsto')
+plt.title('Previsão de Custo de Tratamento')
+plt.show()
+""")
+nb_visual['cells'].append(custo_previsao_visual_code)
+
+# Step 4: Segmentação de Pacientes
+segmentacao_visual = nbf.new_markdown_cell("""
+### **Passo 4**: Segmentação de Pacientes
+
+Aplicamos o algoritmo K-means para segmentar pacientes com base nas características da doença e tratamento.
+""")
+nb_visual['cells'].append(segmentacao_visual)
+
+segmentacao_visual_code = nbf.new_code_cell("""
+# Selecionando as características para o clustering
+X_clustering = df[['Incidência Anual (por 100k hab)', 'Mortalidade (%)', 'Número de Casos']]
+
+# Aplicando o K-means
+kmeans = KMeans(n_clusters=3, random_state=42)
+df['Cluster'] = kmeans.fit_predict(X_clustering)
+
+# Visualizando os clusters
+plt.figure(figsize=(8, 6))
+sns.scatterplot(data=df, x='Incidência Anual (por 100k hab)', y='Mortalidade (%)', hue='Cluster', palette='Set1')
+plt.title('Segmentação de Pacientes com K-means')
+plt.show()
+""")
+nb_visual['cells'].append(segmentacao_visual_code)
+
+# Step 5: Otimização de Alocação de Recursos
+alocacao_visual = nbf.new_markdown_cell("""
+### **Passo 5**: Otimização de Alocação de Recursos
+
+Analisamos as regiões com maior número de casos e custos médios para priorizar a alocação de recursos.
+""")
+nb_visual['cells'].append(alocacao_visual)
+
+alocacao_visual_code = nbf.new_code_cell("""
+# Agrupamento dos dados por região e cálculo de casos e custos médios
+resource_allocation = df.groupby('Região mais Afetada').agg({
+    'Número de Casos': 'sum',
+    'Custo Médio do Tratamento (R$)': 'mean'
+}).sort_values(by='Número de Casos', ascending=False)
+
+# Visualizando os dados
+resource_allocation.plot(kind='bar', figsize=(10, 6))
+plt.title('Alocação de Recursos por Região')
+plt.xlabel('Região')
+plt.ylabel('Número de Casos e Custo Médio')
+plt.show()
+
+resource_allocation.head()
+""")
+nb_visual['cells'].append(alocacao_visual_code)
+
+# Step 6: Análise da Eficácia de Tratamentos
+eficacia_visual = nbf.new_markdown_cell("""
+### **Passo 6**: Análise da Eficácia de Tratamentos
+
+Comparamos a eficácia dos tratamentos com base na redução de incidência e mortalidade.
+""")
+nb_visual['cells'].append(eficacia_visual)
+
+eficacia_visual_code = nbf.new_code_cell("""
+# Agrupando os dados por tipo de tratamento
+treatment_effectiveness = df.groupby('Tipo de Tratamento').agg({
+    'Incidência Anual (por 100k hab)': 'mean',
+    'Mortalidade (%)': 'mean'
+}).sort_values(by='Mortalidade (%)')
+
+# Visualizando a eficácia dos tratamentos
+treatment_effectiveness.plot(kind='bar', figsize=(10, 6), stacked=True)
+plt.title('Eficácia de Tratamentos (Mortalidade e Incidência)')
+plt.xlabel('Tipo de Tratamento')
+plt.ylabel('Média')
+plt.show()
+
+treatment_effectiveness.head()
+""")
+nb_visual['cells'].append(eficacia_visual_code)
+
+# Saving the new notebook
+output_visual_notebook_path = '/mnt/data/Healthcare_Analysis_with_Visuals.ipynb'
+with open(output_visual_notebook_path, 'w') as f:
+    f.write(nbf.writes(nb_visual))
+
+output_visual_notebook_path
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+# Sugestao exploração inicial GPT
+
+# Importando bibliotecas necessárias
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import klib
+
+# Carregando o CSV
+df = pd.read_csv('/mnt/data/large_doencas_brasil.csv')
+
+# Verificando as informações gerais do dataframe
+df.info()
+
+# Estatísticas descritivas do dataframe
+df_describe = df.describe()
+
+# Verificando a variável categórica - por exemplo, Região ou Tipo de Doença
+categorical_column = 'Região mais Afetada'  # Ajustar o nome da coluna conforme o CSV
+grupos = df[categorical_column].value_counts()
+print(grupos)
+
+# Visualizando histogramas de todas as variáveis do dataframe
+df.hist(bins=50, figsize=(14,8))
+plt.show()
+
+# Visualizando histogramas de variáveis específicas
+df['Incidência Anual (por 100k hab)'].hist(bins=50)
+plt.xlabel('Incidência Anual (por 100k hab)')
+plt.ylabel('Contagem')
+plt.title('Distribuição de Incidência Anual')
+plt.show()
+
+df['Custo Médio do Tratamento (R$)'].hist(bins=50)
+plt.xlabel('Custo Médio do Tratamento (R$)')
+plt.ylabel('Contagem')
+plt.title('Distribuição de Custo Médio de Tratamento')
+plt.show()
+
+df['Mortalidade (%)'].hist(bins=50)
+plt.xlabel('Mortalidade (%)')
+plt.ylabel('Contagem')
+plt.title('Distribuição da Mortalidade')
+plt.show()
+
+# Usando klib para visualizar distribuições mais detalhadas
+klib.dist_plot(df['Incidência Anual (por 100k hab)'])
+klib.dist_plot(df['Custo Médio do Tratamento (R$)'])
+klib.dist_plot(df['Mortalidade (%)'])
+
+# ----------------------------------------------------------------------------
+# Análise conduzida a partir dos histogramas 
+
+# i) Verifique se as variáveis numéricas estão na escala correta.
+# Exemplo: o custo médio de tratamento está em reais e pode precisar de ajustes.
+
+# ii) Verifique a distribuição das variáveis e se há limites nos valores (como cap nos valores mais altos).
+# Isso pode impactar no modelo preditivo, então é importante considerar essa limitação.
+
+# iii) Escalas diferentes para as variáveis podem ser normalizadas ou padronizadas
+# para melhorar a performance dos modelos de machine learning.
+
+# iv) O formato das distribuições das variáveis pode indicar qual o melhor modelo a ser utilizado.
+# Distribuições simétricas ou assimétricas podem beneficiar de tratamentos específicos.
+# ----------------------------------------------------------------------------
+
